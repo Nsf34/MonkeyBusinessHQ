@@ -420,22 +420,15 @@
             box-shadow: 0 10px 40px rgba(255, 0, 110, 0.6);
         }
 
-        /* NEW: real image wrapper */
         .polaroid-img {
             width: 100%;
             aspect-ratio: 1;
-            background: #eee;
-            overflow: hidden;
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .polaroid-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+            color: #fff;
+            font-size: 0.8rem;
         }
 
         .polaroid-caption {
@@ -721,7 +714,7 @@
             <h2>📷 PHOTOS // MEMORY BANK</h2>
             
             <div class="year-tabs">
-                <!-- ADD MORE YEAR TABS HERE IF NEEDED -->
+                <!-- ADD MORE YEAR TABS HERE -->
                 <button class="year-tab active" data-year="2025">2025</button>
                 <button class="year-tab" data-year="2024">2024</button>
                 <button class="year-tab" data-year="2023">2023</button>
@@ -729,67 +722,51 @@
 
             <!-- 2025 Photos -->
             <div class="photo-gallery active" data-year-gallery="2025">
-                <!-- Once you send filenames, I'll swap these src values -->
+                <!-- ADD MORE PHOTOS FOR 2025 HERE -->
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2025-photo-1.jpg" alt="January Adventures">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 1</div>
                     <div class="polaroid-caption">January Adventures</div>
                 </div>
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2025-photo-2.jpg" alt="Spring Vibes">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 2</div>
                     <div class="polaroid-caption">Spring Vibes</div>
                 </div>
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2025-photo-3.jpg" alt="Summer Days">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 3</div>
                     <div class="polaroid-caption">Summer Days</div>
                 </div>
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2025-photo-4.jpg" alt="Fall Memories">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 4</div>
                     <div class="polaroid-caption">Fall Memories</div>
                 </div>
             </div>
 
             <!-- 2024 Photos -->
             <div class="photo-gallery" data-year-gallery="2024">
+                <!-- ADD MORE PHOTOS FOR 2024 HERE -->
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2024-photo-1.jpg" alt="New Year Chaos">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 1</div>
                     <div class="polaroid-caption">New Year Chaos</div>
                 </div>
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2024-photo-2.jpg" alt="Beach Trip">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 2</div>
                     <div class="polaroid-caption">Beach Trip</div>
                 </div>
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2024-photo-3.jpg" alt="City Lights">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 3</div>
                     <div class="polaroid-caption">City Lights</div>
                 </div>
             </div>
 
             <!-- 2023 Photos -->
             <div class="photo-gallery" data-year-gallery="2023">
+                <!-- ADD MORE PHOTOS FOR 2023 HERE -->
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2023-photo-1.jpg" alt="The Beginning">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 1</div>
                     <div class="polaroid-caption">The Beginning</div>
                 </div>
                 <div class="polaroid">
-                    <div class="polaroid-img">
-                        <img src="images/2023-photo-2.jpg" alt="Wild Times">
-                    </div>
+                    <div class="polaroid-img">📸<br>Photo 2</div>
                     <div class="polaroid-caption">Wild Times</div>
                 </div>
             </div>
