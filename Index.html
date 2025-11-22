@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐵 Monkey Business HQ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #00ff41;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Lock Screen Styles */
+        #lockScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        #lockScreen.hidden {
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+
+        .terminal-text {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px #00ff41;
+            animation: flicker 2s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff41;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .password-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            margin: 3rem 0 4rem 0;
+        }
+
+        .password-container.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        .password-input {
+            padding: 1.5rem 3rem;
+            font-size: 1.5rem;
+            background: transparent;
+            border: 3px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-align: center;
+            width: 500px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+            letter-spacing: 0.3em;
+        }
+
+        .password-input::placeholder {
+            color: rgba(0, 255, 65, 0.3);
+            letter-spacing: 0.3em;
+        }
+
+        .password-input:focus {
+            outline: none;
+            background: transparent;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.8);
+        }
+
+        #accessBtn {
+            padding: 1.5rem 3rem;
+            font-size: 1.5rem;
+            background: transparent;
+            border: 3px solid #00ff41;
+            color: #00ff41;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+
+        #accessBtn:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.8);
+            transform: scale(1.05);
+        }
+
+        .error-text {
+            color: #ff006e;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-shadow: 0 0 10px #ff006e;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Main Container */
+        #mainContainer {
+            opacity: 0;
+            transition: opacity 0.5s;
+            padding-left: 80px;
+        }
+
+        #mainContainer.visible {
+            opacity: 1;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 80px;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.9);
+            border-right: 2px solid #00ff41;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 2rem;
+            gap: 1.5rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: #00ff41;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            padding: 2rem;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px #00ff41;
+            color: #00ff41;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #ff006e;
+            text-shadow: 0 0 10px #ff006e;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .command-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .command-card:hover::before {
+            opacity: 1;
+        }
+
+        .command-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(0, 255, 65, 0.3);
+        }
+
+        .command-card.playlists { border-color: #00fff2; }
+        .command-card.businesses { border-color: #ffbe0b; }
+        .command-card.photos { border-color: #ff006e; }
+        .command-card.videos { border-color: #8338ec; }
+
+        .command-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .command-card.playlists h3 { color: #00fff2; text-shadow: 0 0 10px #00fff2; }
+        .command-card.businesses h3 { color: #ffbe0b; text-shadow: 0 0 10px #ffbe0b; }
+        .command-card.photos h3 { color: #ff006e; text-shadow: 0 0 10px #ff006e; }
+        .command-card.videos h3 { color: #8338ec; text-shadow: 0 0 10px #8338ec; }
+
+        /* Playlists Section */
+        .cassette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .cassette {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            border: 3px solid #00fff2;
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .cassette:hover {
+            transform: rotate(-2deg) scale(1.05);
+            box-shadow: 0 5px 30px rgba(0, 255, 242, 0.5);
+        }
+
+        .cassette-label {
+            background: #00fff2;
+            color: #000;
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            transform: skew(-5deg);
+        }
+
+        .cassette-info {
+            color: #00fff2;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Businesses Section */
+        .window-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .retro-window {
+            background: #1a1a2e;
+            border: 3px solid #ffbe0b;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .retro-window:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 190, 11, 0.4);
+        }
+
+        .window-header {
+            background: #ffbe0b;
+            color: #000;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #000;
+        }
+
+        .window-content {
+            padding: 1.5rem;
+            color: #ffbe0b;
+        }
+
+        .window-content p {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Photos Section */
+        .year-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .year-tab {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 2px solid #ff006e;
+            color: #ff006e;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        .year-tab:hover, .year-tab.active {
+            background: #ff006e;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.6);
+        }
+
+        .photo-gallery {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .photo-gallery.active {
+            display: grid;
+        }
+
+        .polaroid {
+            background: #fff;
+            padding: 1rem 1rem 3rem 1rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            transform: rotate(0deg);
+            transition: all 0.3s;
+        }
+
+        .polaroid:nth-child(odd) { transform: rotate(-3deg); }
+        .polaroid:nth-child(even) { transform: rotate(2deg); }
+
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.1);
+            z-index: 10;
+            box-shadow: 0 10px 40px rgba(255, 0, 110, 0.6);
+        }
+
+        .polaroid-img {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.8rem;
+        }
+
+        .polaroid-caption {
+            text-align: center;
+            color: #000;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* Videos Section */
+        .vhs-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .vhs-grid.active {
+            display: grid;
+        }
+
+        .vhs-tape {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 3px solid #8338ec;
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .vhs-tape:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(131, 56, 236, 0.5);
+        }
+
+        .vhs-label {
+            background: #8338ec;
+            color: #000;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+
+        .vhs-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #8338ec 0%, #3a0ca3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 3rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .vhs-info {
+            color: #8338ec;
+            font-size: 0.9rem;
+        }
+
+        /* Monkey Mode Button */
+        .monkey-mode {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #ffbe0b;
+            border: 3px solid #000;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .monkey-mode:hover {
+            transform: scale(1.2) rotate(20deg);
+            box-shadow: 0 10px 40px rgba(255, 190, 11, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            #mainContainer { padding-left: 0; padding-top: 70px; }
+            .sidebar { 
+                width: 100%; 
+                height: 60px; 
+                flex-direction: row; 
+                padding: 0.5rem;
+                justify-content: space-around;
+            }
+            .password-input {
+                width: 90%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Lock Screen -->
+    <div id="lockScreen">
+        <div class="terminal-text" id="terminalText">
+            🐵 MONKEY BUSINESS HQ<br>
+            SYSTEM INITIALIZING<span class="cursor"></span>
+        </div>
+        
+        <div class="password-container" id="passwordContainer">
+            <input type="password" class="password-input" id="passwordInput" placeholder="••••••••••••">
+        </div>
+        
+        <button id="accessBtn">ACCESS HQ</button>
+        <div class="error-text" id="errorText"></div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <button class="nav-btn active" data-section="dashboard">🏠</button>
+        <button class="nav-btn" data-section="playlists">🎵</button>
+        <button class="nav-btn" data-section="businesses">💼</button>
+        <button class="nav-btn" data-section="photos">📷</button>
+        <button class="nav-btn" data-section="videos">🎬</button>
+    </div>
+
+    <!-- Main Container -->
+    <div id="mainContainer">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <h1>🐵 MONKEY BUSINESS HQ</h1>
+            <p style="color: #00fff2; font-size: 1.2rem;">COMMAND CENTER // ALL SYSTEMS OPERATIONAL</p>
+            
+            <div class="dashboard-grid">
+                <div class="command-card playlists" data-nav="playlists">
+                    <h3>🎵 PLAYLISTS</h3>
+                    <p>Your sonic adventures await. Navigate through curated chaos and organized melodies.</p>
+                </div>
+                
+                <div class="command-card businesses" data-nav="businesses">
+                    <h3>💼 BUSINESSES</h3>
+                    <p>The empire of monkeying around. Projects, schemes, and legitimate operations.</p>
+                </div>
+                
+                <div class="command-card photos" data-nav="photos">
+                    <h3>📷 PHOTOS</h3>
+                    <p>Captured moments through the years. Memories in pixel form, organized by time.</p>
+                </div>
+                
+                <div class="command-card videos" data-nav="videos">
+                    <h3>🎬 VIDEOS</h3>
+                    <p>Moving pictures and motion memories. The cinema of monkey business.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Playlists Section -->
+        <section id="playlists" class="section">
+            <h2>🎵 PLAYLISTS // SONIC ARCHIVES</h2>
+            
+            <div class="cassette-grid">
+                <!-- ADD MORE PLAYLISTS BELOW THIS COMMENT -->
+                <div class="cassette">
+                    <div class="cassette-label">SIDE A: VIBES</div>
+                    <div class="cassette-info">
+                        <strong>Summer Nights</strong><br>
+                        Chill beats for warm evenings<br>
+                        24 tracks // 1h 42m
+                    </div>
+                </div>
+
+                <div class="cassette">
+                    <div class="cassette-label">SIDE B: ENERGY</div>
+                    <div class="cassette-info">
+                        <strong>Code & Flow</strong><br>
+                        Focus music for deep work<br>
+                        18 tracks // 1h 15m
+                    </div>
+                </div>
+
+                <div class="cassette">
+                    <div class="cassette-label">SIDE C: CHAOS</div>
+                    <div class="cassette-info">
+                        <strong>Monkey Madness</strong><br>
+                        When things get wild<br>
+                        31 tracks // 2h 8m
+                    </div>
+                </div>
+
+                <div class="cassette">
+                    <div class="cassette-label">SIDE D: NOSTALGIA</div>
+                    <div class="cassette-info">
+                        <strong>Throwback Jams</strong><br>
+                        Classics that never age<br>
+                        27 tracks // 1h 54m
+                    </div>
+                </div>
+                <!-- ADD MORE CASSETTES ABOVE THIS COMMENT -->
+            </div>
+        </section>
+
+        <!-- Businesses Section -->
+        <section id="businesses" class="section">
+            <h2>💼 BUSINESSES // OPERATIONS CENTER</h2>
+            
+            <div class="window-grid">
+                <!-- ADD MORE BUSINESSES BELOW THIS COMMENT -->
+                <div class="retro-window">
+                    <div class="window-header">
+                        <span>🍌 BANANA LABS</span>
+                        <div class="window-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <strong>Innovation Division</strong>
+                        <p>Experimental projects and wild ideas. Where the magic happens.</p>
+                        <p style="margin-top: 1rem;">Status: ACTIVE_</p>
+                    </div>
+                </div>
+
+                <div class="retro-window">
+                    <div class="window-header">
+                        <span>🎨 CREATIVE CHAOS</span>
+                        <div class="window-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <strong>Design Studio</strong>
+                        <p>Making things look good since forever. Pixels, colors, and vibes.</p>
+                        <p style="margin-top: 1rem;">Status: IN_PROGRESS_</p>
+                    </div>
+                </div>
+
+                <div class="retro-window">
+                    <div class="window-header">
+                        <span>💻 CODE MONKEYS</span>
+                        <div class="window-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <strong>Development Team</strong>
+                        <p>Building digital dreams one line at a time. Bugs included.</p>
+                        <p style="margin-top: 1rem;">Status: DEBUGGING_</p>
+                    </div>
+                </div>
+
+                <div class="retro-window">
+                    <div class="window-header">
+                        <span>🚀 LAUNCH PAD</span>
+                        <div class="window-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    <div class="window-content">
+                        <strong>Startup Incubator</strong>
+                        <p>New ventures and bold experiments. Taking off to the moon.</p>
+                        <p style="margin-top: 1rem;">Status: LAUNCHING_</p>
+                    </div>
+                </div>
+                <!-- ADD MORE WINDOWS ABOVE THIS COMMENT -->
+            </div>
+        </section>
+
+        <!-- Photos Section -->
+        <section id="photos" class="section">
+            <h2>📷 PHOTOS // MEMORY BANK</h2>
+            
+            <div class="year-tabs">
+                <!-- ADD MORE YEAR TABS HERE -->
+                <button class="year-tab active" data-year="2025">2025</button>
+                <button class="year-tab" data-year="2024">2024</button>
+                <button class="year-tab" data-year="2023">2023</button>
+            </div>
+
+            <!-- 2025 Photos -->
+            <div class="photo-gallery active" data-year-gallery="2025">
+                <!-- ADD MORE PHOTOS FOR 2025 HERE -->
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 1</div>
+                    <div class="polaroid-caption">January Adventures</div>
+                </div>
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 2</div>
+                    <div class="polaroid-caption">Spring Vibes</div>
+                </div>
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 3</div>
+                    <div class="polaroid-caption">Summer Days</div>
+                </div>
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 4</div>
+                    <div class="polaroid-caption">Fall Memories</div>
+                </div>
+            </div>
+
+            <!-- 2024 Photos -->
+            <div class="photo-gallery" data-year-gallery="2024">
+                <!-- ADD MORE PHOTOS FOR 2024 HERE -->
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 1</div>
+                    <div class="polaroid-caption">New Year Chaos</div>
+                </div>
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 2</div>
+                    <div class="polaroid-caption">Beach Trip</div>
+                </div>
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 3</div>
+                    <div class="polaroid-caption">City Lights</div>
+                </div>
+            </div>
+
+            <!-- 2023 Photos -->
+            <div class="photo-gallery" data-year-gallery="2023">
+                <!-- ADD MORE PHOTOS FOR 2023 HERE -->
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 1</div>
+                    <div class="polaroid-caption">The Beginning</div>
+                </div>
+                <div class="polaroid">
+                    <div class="polaroid-img">📸<br>Photo 2</div>
+                    <div class="polaroid-caption">Wild Times</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Videos Section -->
+        <section id="videos" class="section">
+            <h2>🎬 VIDEOS // MOTION ARCHIVE</h2>
+            
+            <div class="year-tabs">
+                <!-- ADD MORE VIDEO YEAR TABS HERE -->
+                <button class="year-tab active" data-video-year="2025">2025</button>
+                <button class="year-tab" data-video-year="2024">2024</button>
+                <button class="year-tab" data-video-year="2023">2023</button>
+            </div>
+
+            <!-- 2025 Videos -->
+            <div class="vhs-grid active" data-video-gallery="2025">
+                <!-- ADD MORE VIDEOS FOR 2025 HERE -->
+                <div class="vhs-tape">
+                    <div class="vhs-label">TAPE #001 - 2025</div>
+                    <div class="vhs-thumb">▶️</div>
+                    <div class="vhs-info">
+                        <strong>Spring Adventures</strong><br>
+                        Duration: 5:24<br>
+                        Status: Ready to play
+                    </div>
+                </div>
+
+                <div class="vhs-tape">
+                    <div class="vhs-label">TAPE #002 - 2025</div>
+                    <div class="vhs-thumb">▶️</div>
+                    <div class="vhs-info">
+                        <strong>Summer Shenanigans</strong><br>
+                        Duration: 8:15<br>
+                        Status: Ready to play
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2024 Videos -->
+            <div class="vhs-grid" data-video-gallery="2024">
+                <!-- ADD MORE VIDEOS FOR 2024 HERE -->
+                <div class="vhs-tape">
+                    <div class="vhs-label">TAPE #001 - 2024</div>
+                    <div class="vhs-thumb">▶️</div>
+                    <div class="vhs-info">
+                        <strong>Year in Review</strong><br>
+                        Duration: 12:00<br>
+                        Status: Ready to play
+                    </div>
+                </div>
+
+                <div class="vhs-tape">
+                    <div class="vhs-label">TAPE #002 - 2024</div>
+                    <div class="vhs-thumb">▶️</div>
+                    <div class="vhs-info">
+                        <strong>Holiday Special</strong><br>
+                        Duration: 6:42<br>
+                        Status: Ready to play
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2023 Videos -->
+            <div class="vhs-grid" data-video-gallery="2023">
+                <!-- ADD MORE VIDEOS FOR 2023 HERE -->
+                <div class="vhs-tape">
+                    <div class="vhs-label">TAPE #001 - 2023</div>
+                    <div class="vhs-thumb">▶️</div>
+                    <div class="vhs-info">
+                        <strong>The Origin Story</strong><br>
+                        Duration: 10:30<br>
+                        Status: Ready to play
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Monkey Mode Button -->
+    <button class="monkey-mode" title="Toggle Monkey Mode">🐵</button>
+
+    <script>
+        // Lock Screen with Password
+        const lockScreen = document.getElementById('lockScreen');
+        const accessBtn = document.getElementById('accessBtn');
+        const mainContainer = document.getElementById('mainContainer');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordContainer = document.getElementById('passwordContainer');
+        const errorText = document.getElementById('errorText');
+        const terminalText = document.getElementById('terminalText');
+        const correctPassword = 'EliGoodwin135!';
+        let passwordShown = false;
+
+        // Show password field when ACCESS HQ is clicked
+        accessBtn.addEventListener('click', () => {
+            if (!passwordShown) {
+                // First click - show password field
+                terminalText.innerHTML = '🐵 MONKEY BUSINESS HQ<br>ENTER PASSWORD<span class="cursor"></span>';
+                passwordContainer.classList.add('visible');
+                passwordInput.focus();
+                accessBtn.textContent = 'SUBMIT';
+                passwordShown = true;
+            } else {
+                // Second click - check password
+                checkPassword();
+            }
+        });
+
+        function checkPassword() {
+            if (passwordInput.value === correctPassword) {
+                lockScreen.classList.add('hidden');
+                setTimeout(() => {
+                    mainContainer.classList.add('visible');
+                }, 500);
+                errorText.textContent = '';
+            } else {
+                errorText.textContent = '❌ ACCESS DENIED - INCORRECT PASSWORD';
+                passwordInput.value = '';
+                passwordInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    passwordInput.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && passwordShown) {
+                checkPassword();
+            }
+        });
+
+        // Navigation
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+
+        function showSection(sectionId) {
+            sections.forEach(s => s.classList.remove('active'));
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        }
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetSection = btn.getAttribute('data-section');
+                showSection(targetSection);
+            });
+        });
+
+        // Dashboard cards navigation
+        const commandCards = document.querySelectorAll('.command-card');
+        commandCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const targetNav = card.getAttribute('data-nav');
+                showSection(targetNav);
+            });
+        });
+
+        // Photo year tabs
+        const yearTabs = document.querySelectorAll('[data-year]');
+        const photoGalleries = document.querySelectorAll('[data-year-gallery]');
+
+        yearTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const year = tab.getAttribute('data-year');
+                
+                // Update active tab in photos section
+                const photoSection = document.getElementById('photos');
+                const photoTabs = photoSection.querySelectorAll('[data-year]');
+                photoTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show corresponding gallery
+                photoGalleries.forEach(gallery => {
+                    if (gallery.getAttribute('data-year-gallery') === year) {
+                        gallery.classList.add('active');
+                    } else {
+                        gallery.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Video year tabs
+        const videoYearTabs = document.querySelectorAll('[data-video-year]');
+        const videoGalleries = document.querySelectorAll('[data-video-gallery]');
+
+        videoYearTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const year = tab.getAttribute('data-video-year');
+                
+                // Update active tab in videos section
+                const videoSection = document.getElementById('videos');
+                const videoTabs = videoSection.querySelectorAll('[data-video-year]');
+                videoTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show corresponding gallery
+                videoGalleries.forEach(gallery => {
+                    if (gallery.getAttribute('data-video-gallery') === year) {
+                        gallery.classList.add('active');
+                    } else {
+                        gallery.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Monkey Mode Easter Egg
+        const monkeyModeBtn = document.querySelector('.monkey-mode');
+        let monkeyModeActive = false;
+
+        monkeyModeBtn.addEventListener('click', () => {
+            monkeyModeActive = !monkeyModeActive;
+            
+            if (monkeyModeActive) {
+                document.body.style.cursor = 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\'><text y=\'24\' font-size=\'24\'>🍌</text></svg>"), auto';
+                createBananaRain();
+            } else {
+                document.body.style.cursor = 'default';
+                const bananas = document.querySelectorAll('.banana-rain');
+                bananas.forEach(b => b.remove());
+            }
+        });
+
+        function createBananaRain() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const banana = document.createElement('div');
+                    banana.textContent = '🍌';
+                    banana.className = 'banana-rain';
+                    banana.style.position = 'fixed';
+                    banana.style.left = Math.random() * 100 + '%';
+                    banana.style.top = '-50px';
+                    banana.style.fontSize = '2rem';
+                    banana.style.zIndex = '9999';
+                    banana.style.pointerEvents = 'none';
+                    banana.style.animation = `fall ${2 + Math.random() * 3}s linear`;
+                    document.body.appendChild(banana);
+                    
+                    setTimeout(() => banana.remove(), 5000);
+                }, i * 200);
+            }
+        }
+
+        // Add fall animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
