@@ -264,7 +264,6 @@
         .command-card.playlists { border-color: #00fff2; }
         .command-card.businesses { border-color: #ffbe0b; }
         .command-card.photos { border-color: #ff006e; }
-        .command-card.videos { border-color: #8338ec; }
 
         .command-card h3 {
             font-size: 1.8rem;
@@ -274,7 +273,6 @@
         .command-card.playlists h3 { color: #00fff2; text-shadow: 0 0 10px #00fff2; }
         .command-card.businesses h3 { color: #ffbe0b; text-shadow: 0 0 10px #ffbe0b; }
         .command-card.photos h3 { color: #ff006e; text-shadow: 0 0 10px #ff006e; }
-        .command-card.videos h3 { color: #8338ec; text-shadow: 0 0 10px #8338ec; }
 
         /* Playlists Section */
         .cassette-grid {
@@ -405,7 +403,7 @@
 
         .polaroid {
             background: #fff;
-            padding: 1rem 1rem 3rem 1rem;
+            padding: 1rem 1rem 1.5rem 1rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
             transform: rotate(0deg);
             transition: all 0.3s;
@@ -423,82 +421,10 @@
         .polaroid-img {
             width: 100%;
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 0.8rem;
-            overflow: hidden;
-            border-radius: 4px;
-        }
-
-        .polaroid-img img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
             display: block;
-        }
-
-        .polaroid-caption {
-            text-align: center;
-            color: #000;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-        }
-
-        /* Videos Section */
-        .vhs-grid {
-            display: none;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .vhs-grid.active {
-            display: grid;
-        }
-
-        .vhs-tape {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            border: 3px solid #8338ec;
-            border-radius: 10px;
-            padding: 1.5rem;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .vhs-tape:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 40px rgba(131, 56, 236, 0.5);
-        }
-
-        .vhs-label {
-            background: #8338ec;
-            color: #000;
-            padding: 1rem;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-        }
-
-        .vhs-thumb {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: linear-gradient(135deg, #8338ec 0%, #3a0ca3 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 3rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-        }
-
-        .vhs-info {
-            color: #8338ec;
-            font-size: 0.9rem;
+            border-radius: 4px;
+            background: #000;
         }
 
         /* Monkey Mode Button */
@@ -567,7 +493,6 @@
         <button class="nav-btn" data-section="playlists">🎵</button>
         <button class="nav-btn" data-section="businesses">💼</button>
         <button class="nav-btn" data-section="photos">📷</button>
-        <button class="nav-btn" data-section="videos">🎬</button>
     </div>
 
     <!-- Main Container -->
@@ -590,12 +515,7 @@
                 
                 <div class="command-card photos" data-nav="photos">
                     <h3>📷 PHOTOS</h3>
-                    <p>Captured moments through the years. Memories in pixel form, organized by time.</p>
-                </div>
-                
-                <div class="command-card videos" data-nav="videos">
-                    <h3>🎬 VIDEOS</h3>
-                    <p>Moving pictures and motion memories. The cinema of monkey business.</p>
+                    <p>Captured moments through the years. Photos + videos together, by year.</p>
                 </div>
             </div>
         </section>
@@ -718,58 +638,21 @@
             </div>
         </section>
 
-        <!-- Photos Section -->
+        <!-- Photos + Videos Section -->
         <section id="photos" class="section">
             <h2>📷 PHOTOS // MEMORY BANK</h2>
             
             <div class="year-tabs">
-                <!-- ADD MORE YEAR TABS HERE -->
                 <button class="year-tab active" data-year="2025">2025</button>
                 <button class="year-tab" data-year="2024">2024</button>
                 <button class="year-tab" data-year="2023">2023</button>
+                <button class="year-tab" data-year="2022">2022</button>
             </div>
 
-            <!-- 2025 Photos -->
-            <div class="photo-gallery active" data-year-gallery="2025">
-                <!-- Photos for 2025 are generated by JavaScript -->
-            </div>
-
-            <!-- 2024 Photos -->
-            <div class="photo-gallery" data-year-gallery="2024">
-                <!-- Photos for 2024 are generated by JavaScript -->
-            </div>
-
-            <!-- 2023 Photos -->
-            <div class="photo-gallery" data-year-gallery="2023">
-                <!-- Photos for 2023 are generated by JavaScript -->
-            </div>
-        </section>
-
-        <!-- Videos Section -->
-        <section id="videos" class="section">
-            <h2>🎬 VIDEOS // MOTION ARCHIVE</h2>
-            
-            <div class="year-tabs">
-                <!-- ADD MORE VIDEO YEAR TABS HERE -->
-                <button class="year-tab active" data-video-year="2025">2025</button>
-                <button class="year-tab" data-video-year="2024">2024</button>
-                <button class="year-tab" data-video-year="2023">2023</button>
-            </div>
-
-            <!-- 2025 Videos -->
-            <div class="vhs-grid active" data-video-gallery="2025">
-                <!-- Videos for 2025 are generated by JavaScript -->
-            </div>
-
-            <!-- 2024 Videos -->
-            <div class="vhs-grid" data-video-gallery="2024">
-                <!-- Videos for 2024 are generated by JavaScript -->
-            </div>
-
-            <!-- 2023 Videos -->
-            <div class="vhs-grid" data-video-gallery="2023">
-                <!-- Videos for 2023 are generated by JavaScript -->
-            </div>
+            <div class="photo-gallery active" data-year-gallery="2025"></div>
+            <div class="photo-gallery" data-year-gallery="2024"></div>
+            <div class="photo-gallery" data-year-gallery="2023"></div>
+            <div class="photo-gallery" data-year-gallery="2022"></div>
         </section>
     </div>
 
@@ -777,6 +660,55 @@
     <button class="monkey-mode" title="Toggle Monkey Mode">🐵</button>
 
     <script>
+        // ---------- MEDIA CONFIG (EDIT THIS ONLY) ----------
+        // Add your photos & videos here.
+        // type: "image" or "video"
+        // src: "photos/YEAR/your-file-name.ext"
+        const mediaData = {
+            "2025": [
+                // { type: "image", src: "photos/2025/IMG_0001.jpg" },
+                // { type: "video", src: "photos/2025/VID_0002.mp4" },
+            ],
+            "2024": [
+                // { type: "image", src: "photos/2024/IMG_0001.jpg" },
+            ],
+            "2023": [
+                // { type: "video", src: "photos/2023/VID_0001.mp4" },
+            ],
+            "2022": [
+                // { type: "image", src: "photos/2022/IMG_0001.jpg" },
+            ]
+        };
+        // ---------------------------------------------------
+
+        function renderMediaGalleries() {
+            Object.keys(mediaData).forEach(year => {
+                const gallery = document.querySelector(`.photo-gallery[data-year-gallery="${year}"]`);
+                if (!gallery) return;
+
+                gallery.innerHTML = '';
+
+                mediaData[year].forEach(item => {
+                    const polaroid = document.createElement('div');
+                    polaroid.className = 'polaroid';
+
+                    let mediaEl;
+                    if (item.type === 'video') {
+                        mediaEl = document.createElement('video');
+                        mediaEl.controls = true;
+                    } else {
+                        mediaEl = document.createElement('img');
+                    }
+
+                    mediaEl.src = item.src;
+                    mediaEl.className = 'polaroid-img';
+
+                    polaroid.appendChild(mediaEl);
+                    gallery.appendChild(polaroid);
+                });
+            });
+        }
+
         // Lock Screen with Password
         const lockScreen = document.getElementById('lockScreen');
         const accessBtn = document.getElementById('accessBtn');
@@ -788,17 +720,14 @@
         const correctPassword = 'EliGoodwin135!';
         let passwordShown = false;
 
-        // Show password field when ACCESS HQ is clicked
         accessBtn.addEventListener('click', () => {
             if (!passwordShown) {
-                // First click - show password field
                 terminalText.innerHTML = '🐵 MONKEY BUSINESS HQ<br>ENTER PASSWORD<span class="cursor"></span>';
                 passwordContainer.classList.add('visible');
                 passwordInput.focus();
                 accessBtn.textContent = 'SUBMIT';
                 passwordShown = true;
             } else {
-                // Second click - check password
                 checkPassword();
             }
         });
@@ -854,142 +783,6 @@
             });
         });
 
-        /* ============================
-           PHOTO CONFIG & RENDERING
-           ============================ */
-
-        // You will only ever need to edit this object + the one below for videos.
-        // When you have real filenames, add file: "path/to/image.jpg" to each item.
-        const photoData = {
-            "2025": [
-                { caption: "January Adventures" },
-                { caption: "Spring Vibes" },
-                { caption: "Summer Days" },
-                { caption: "Fall Memories" }
-            ],
-            "2024": [
-                { caption: "New Year Chaos" },
-                { caption: "Beach Trip" },
-                { caption: "City Lights" }
-            ],
-            "2023": [
-                { caption: "The Beginning" },
-                { caption: "Wild Times" }
-            ]
-        };
-
-        function buildPhotoGalleries() {
-            Object.keys(photoData).forEach(year => {
-                const gallery = document.querySelector(`.photo-gallery[data-year-gallery="${year}"]`);
-                if (!gallery) return;
-
-                gallery.innerHTML = '';
-
-                photoData[year].forEach(item => {
-                    const polaroid = document.createElement('div');
-                    polaroid.className = 'polaroid';
-
-                    const imgWrap = document.createElement('div');
-                    imgWrap.className = 'polaroid-img';
-
-                    if (item.file) {
-                        const img = document.createElement('img');
-                        img.src = item.file;
-                        img.alt = item.caption || `Photo from ${year}`;
-                        imgWrap.appendChild(img);
-                    } else {
-                        imgWrap.textContent = '📸';
-                    }
-
-                    const caption = document.createElement('div');
-                    caption.className = 'polaroid-caption';
-                    caption.textContent = item.caption || '';
-
-                    polaroid.appendChild(imgWrap);
-                    polaroid.appendChild(caption);
-                    gallery.appendChild(polaroid);
-                });
-            });
-        }
-
-        /* ============================
-           VIDEO CONFIG & RENDERING
-           ============================ */
-
-        const videoData = {
-            "2025": [
-                {
-                    label: "TAPE #001 - 2025",
-                    title: "Spring Adventures",
-                    duration: "5:24",
-                    status: "Ready to play"
-                },
-                {
-                    label: "TAPE #002 - 2025",
-                    title: "Summer Shenanigans",
-                    duration: "8:15",
-                    status: "Ready to play"
-                }
-            ],
-            "2024": [
-                {
-                    label: "TAPE #001 - 2024",
-                    title: "Year in Review",
-                    duration: "12:00",
-                    status: "Ready to play"
-                },
-                {
-                    label: "TAPE #002 - 2024",
-                    title: "Holiday Special",
-                    duration: "6:42",
-                    status: "Ready to play"
-                }
-            ],
-            "2023": [
-                {
-                    label: "TAPE #001 - 2023",
-                    title: "The Origin Story",
-                    duration: "10:30",
-                    status: "Ready to play"
-                }
-            ]
-        };
-
-        function buildVideoGalleries() {
-            Object.keys(videoData).forEach(year => {
-                const gallery = document.querySelector(`.vhs-grid[data-video-gallery="${year}"]`);
-                if (!gallery) return;
-
-                gallery.innerHTML = '';
-
-                videoData[year].forEach(item => {
-                    const tape = document.createElement('div');
-                    tape.className = 'vhs-tape';
-
-                    const label = document.createElement('div');
-                    label.className = 'vhs-label';
-                    label.textContent = item.label || `TAPE - ${year}`;
-
-                    const thumb = document.createElement('div');
-                    thumb.className = 'vhs-thumb';
-                    thumb.textContent = '▶️';
-
-                    const info = document.createElement('div');
-                    info.className = 'vhs-info';
-                    info.innerHTML = `
-                        <strong>${item.title || 'Untitled Video'}</strong><br>
-                        ${item.duration ? `Duration: ${item.duration}<br>` : ''}
-                        ${item.status ? `Status: ${item.status}` : ''}
-                    `;
-
-                    tape.appendChild(label);
-                    tape.appendChild(thumb);
-                    tape.appendChild(info);
-                    gallery.appendChild(tape);
-                });
-            });
-        }
-
         // Photo year tabs
         const yearTabs = document.querySelectorAll('[data-year]');
         const photoGalleries = document.querySelectorAll('[data-year-gallery]');
@@ -998,40 +791,13 @@
             tab.addEventListener('click', () => {
                 const year = tab.getAttribute('data-year');
                 
-                // Update active tab in photos section
                 const photoSection = document.getElementById('photos');
                 const photoTabs = photoSection.querySelectorAll('[data-year]');
                 photoTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 
-                // Show corresponding gallery
                 photoGalleries.forEach(gallery => {
                     if (gallery.getAttribute('data-year-gallery') === year) {
-                        gallery.classList.add('active');
-                    } else {
-                        gallery.classList.remove('active');
-                    }
-                });
-            });
-        });
-
-        // Video year tabs
-        const videoYearTabs = document.querySelectorAll('[data-video-year]');
-        const videoGalleries = document.querySelectorAll('[data-video-gallery]');
-
-        videoYearTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const year = tab.getAttribute('data-video-year');
-                
-                // Update active tab in videos section
-                const videoSection = document.getElementById('videos');
-                const videoTabs = videoSection.querySelectorAll('[data-video-year]');
-                videoTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Show corresponding gallery
-                videoGalleries.forEach(gallery => {
-                    if (gallery.getAttribute('data-video-gallery') === year) {
                         gallery.classList.add('active');
                     } else {
                         gallery.classList.remove('active');
@@ -1077,7 +843,6 @@
             }
         }
 
-        // Add fall animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes fall {
@@ -1088,9 +853,8 @@
         `;
         document.head.appendChild(style);
 
-        // Build galleries once on load
-        buildPhotoGalleries();
-        buildVideoGalleries();
+        // Build galleries on load
+        renderMediaGalleries();
     </script>
 </body>
 </html>
